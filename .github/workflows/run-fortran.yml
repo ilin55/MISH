@@ -1,0 +1,42 @@
+name: Compile and run T-matrix code
+
+on:
+  push:
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  run:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install gfortran
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y gfortran
+          gfortran --version | head -1
+
+      - name: Compile
+        run: gfortran -O2 -std=legacy -o tmatrix tmd.lp.f lpd.f 2>&1 | tee compile.log
+
+      - name: Run
+        run: |
+          mkdir -p results
+          ( time ./tmatrix ) > results/screen.txt 2>&1 || echo "Program exited with code $?" >> results/screen.txt
+          cp compile.log results/compile.log
+          [ -f test ] && cp test results/test.txt
+          [ -f tmatr.write ] && cp tmatr.write results/tmatr.write.txt
+          cat results/screen.txt
+          echo "===== test ====="
+          cat results/test.txt || true
+
+      - name: Save results to the repository
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add results
+          git commit -m "Results of T-matrix run [skip ci]" || echo "No changes"
+          git push
