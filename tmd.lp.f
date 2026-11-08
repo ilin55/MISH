@@ -381,16 +381,16 @@ C  INPUT DATA ********************************************************
  
       RAT=1 D0 
       NDISTR=4
-      AXMAX=0.2 D0
+      AXMAX=0.3D0
       NPNAX=1
       B=0.1D0
       GAM=0.5D0
       NKMAX=-1
-      EPS=1D0/1.001D0
+      EPS=0.5D0
       NP=-1
       LAM=0.55D0 
-      MRR=1.7 d0
-      MRI=0.03D0 
+      MRR=1.33D0
+      MRI=0.01D0 
       DDELT=0.001D0 
       NPNA=181 
       NDGS=2
